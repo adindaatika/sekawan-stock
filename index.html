@@ -15,7 +15,6 @@
     --mono: 'JetBrains Mono', monospace; --sans: 'Inter', sans-serif;
   }
   body { background: var(--navy); color: var(--text); font-family: var(--sans); min-height: 100vh; font-size: 14px; }
-
   .header { background: var(--navy2); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
   .logo { display: flex; align-items: center; gap: 10px; }
   .logo-mark { width: 32px; height: 32px; background: var(--steel); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 500; font-size: 13px; color: #fff; }
@@ -23,10 +22,7 @@
   .logo-sub { font-size: 11px; color: var(--text2); }
   .last-sync { font-size: 11px; color: var(--muted); font-family: var(--mono); text-align: right; }
   .last-sync span { color: var(--steel2); }
-
   .main { max-width: 1300px; margin: 0 auto; padding: 28px 24px 60px; }
-
-  /* CONFIG */
   .config-card { background: var(--navy2); border: 1px solid var(--steel); border-radius: 10px; padding: 18px 20px; margin-bottom: 24px; }
   .config-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
   .config-row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -34,37 +30,26 @@
   #scriptUrl:focus { border-color: var(--steel); }
   #scriptUrl::placeholder { color: var(--muted); }
   .config-hint { margin-top: 8px; font-size: 11px; color: var(--muted); }
-
   .btn { border: none; border-radius: 6px; padding: 8px 18px; font-family: var(--sans); font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
   .btn-primary { background: var(--steel); color: #fff; }
   .btn-primary:hover { background: var(--steel2); }
   .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
   .btn-ghost { background: transparent; border: 1px solid var(--muted); color: var(--text2); }
   .btn-ghost:hover { border-color: var(--text2); color: var(--white); }
-
-  /* SEARCH PANEL */
   .search-panel { background: var(--navy2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
   .field-label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
-
   .search-tabs { display: flex; gap: 2px; background: var(--navy3); border-radius: 7px; padding: 3px; margin-bottom: 16px; width: fit-content; }
   .tab { padding: 5px 16px; border-radius: 5px; font-size: 12px; font-weight: 500; color: var(--text2); cursor: pointer; transition: all 0.15s; user-select: none; }
   .tab.active { background: var(--steel); color: #fff; }
-
-  .search-row { display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
-  .search-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 200px; position: relative; }
-
-  /* AUTOCOMPLETE INPUT */
   .ac-wrap { position: relative; }
   .ac-input { width: 100%; background: var(--navy3); border: 1px solid var(--muted); border-radius: 6px; padding: 9px 36px 9px 12px; color: var(--white); font-family: var(--sans); font-size: 13px; outline: none; transition: border-color 0.15s; }
   .ac-input:focus { border-color: var(--steel); }
   .ac-input::placeholder { color: var(--muted); }
   .ac-input.has-value { border-color: var(--steel2); }
-  .ac-clear { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 2px; display: none; }
+  .ac-clear { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: 18px; line-height: 1; padding: 2px; display: none; }
   .ac-clear.visible { display: block; }
   .ac-clear:hover { color: var(--white); }
-
-  /* DROPDOWN LIST */
-  .ac-list { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--navy2); border: 1px solid var(--steel); border-radius: 8px; max-height: 240px; overflow-y: auto; z-index: 200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .ac-list { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--navy2); border: 1px solid var(--steel); border-radius: 8px; max-height: 260px; overflow-y: auto; z-index: 200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
   .ac-list.open { display: block; }
   .ac-list::-webkit-scrollbar { width: 6px; }
   .ac-list::-webkit-scrollbar-track { background: var(--navy3); }
@@ -74,26 +59,20 @@
   .ac-item:hover, .ac-item.highlighted { background: var(--navy3); color: var(--white); }
   .ac-item mark { background: none; color: var(--steel2); font-weight: 600; }
   .ac-empty { padding: 12px 14px; color: var(--muted); font-size: 13px; }
-
-  /* CABANG PILLS */
   .cabang-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
   .c-pill { background: var(--navy3); border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 500; color: var(--text2); cursor: pointer; white-space: nowrap; transition: all 0.15s; user-select: none; }
   .c-pill:hover { border-color: var(--steel); color: var(--text); }
   .c-pill.active { background: var(--steel); border-color: var(--steel); color: #fff; }
-
-  /* RESULTS */
   .results-wrap { background: var(--navy2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
   .results-header { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
   .results-meta { font-size: 12px; color: var(--text2); }
   .results-meta strong { color: var(--white); }
-
   .summary-strip { display: flex; border-bottom: 1px solid var(--border); }
   .summary-item { flex: 1; padding: 10px 18px; border-right: 1px solid var(--border); }
   .summary-item:last-child { border-right: none; }
   .s-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 3px; }
   .s-val { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--white); }
   .s-val.accent { color: var(--steel2); }
-
   .tbl-scroll { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   thead tr { background: var(--navy3); }
@@ -107,13 +86,11 @@
   td.bold { font-weight: 500; color: var(--white); }
   td.right { text-align: right; font-family: var(--mono); font-size: 12px; }
   td.note { max-width: 220px; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: var(--text2); }
-
   .badge { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 11px; font-weight: 500; white-space: nowrap; }
   .badge-green  { background: rgba(46,204,113,0.13); color: #2ECC71; }
   .badge-yellow { background: rgba(243,156,18,0.13);  color: #F39C12; }
   .badge-red    { background: rgba(231,76,60,0.13);   color: #E74C3C; }
   .badge-muted  { background: rgba(74,96,128,0.2);    color: var(--text2); }
-
   .state-box { padding: 56px 20px; text-align: center; color: var(--text2); }
   .state-icon { font-size: 34px; margin-bottom: 10px; }
   .state-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 5px; }
@@ -137,8 +114,6 @@
 </div>
 
 <div class="main">
-
-  <!-- CONFIG -->
   <div class="config-card" id="configCard">
     <div class="config-title">🔗 Hubungkan ke Data Source</div>
     <div class="config-row">
@@ -148,13 +123,11 @@
     <div class="config-hint">URL disimpan di browser — tidak perlu diisi ulang setiap kali buka.</div>
   </div>
 
-  <!-- SEARCH -->
   <div class="search-panel" id="searchPanel" style="display:none">
     <div class="search-tabs">
       <div class="tab active" id="tabKode" onclick="switchTab('kode')">Kode Barang</div>
       <div class="tab" id="tabNama" onclick="switchTab('nama')">Nama Barang</div>
     </div>
-
     <div class="field-label" id="fieldLabel">Ketik Kode Barang</div>
     <div class="ac-wrap">
       <input class="ac-input" id="acInput" type="text" placeholder="Ketik untuk mencari…" autocomplete="off"
@@ -162,15 +135,12 @@
       <button class="ac-clear" id="acClear" onclick="clearInput()">×</button>
       <div class="ac-list" id="acList"></div>
     </div>
-
-    <!-- CABANG PILLS — shown after item selected -->
     <div id="cabangWrap" style="display:none">
       <div class="field-label" style="margin-top:16px">Filter Cabang</div>
       <div class="cabang-row" id="cabangRow"></div>
     </div>
   </div>
 
-  <!-- RESULTS -->
   <div class="results-wrap">
     <div class="results-header">
       <div class="results-meta">Menampilkan <strong id="rowCount">—</strong> baris</div>
@@ -187,13 +157,13 @@
           <tr>
             <th onclick="sortBy('Cabang')">Cabang <span id="s-Cabang"></span></th>
             <th onclick="sortBy('Kode')">Kode <span id="s-Kode"></span></th>
-            <th onclick="sortBy('TYPE')">TYPE <span id="s-TYPE"></span></th>
-            <th onclick="sortBy('LENGTH (mm)')">Length (mm) <span id="s-LENGTH"></span></th>
-            <th onclick="sortBy('WIDTH (mm)')">Width (mm) <span id="s-WIDTH"></span></th>
-            <th onclick="sortBy('QTY')">QTY <span id="s-QTY"></span></th>
+            <th onclick="sortBy('Tipe')">TYPE <span id="s-Tipe"></span></th>
+            <th onclick="sortBy('Length')">Length (mm) <span id="s-Length"></span></th>
+            <th onclick="sortBy('Width')">Width (mm) <span id="s-Width"></span></th>
+            <th onclick="sortBy('Qty')">QTY <span id="s-Qty"></span></th>
             <th>Satuan</th>
             <th onclick="sortBy('SQM')">SQM <span id="s-SQM"></span></th>
-            <th onclick="sortBy('Fabrikasi No.')">Fabrikasi No. <span id="s-FAB"></span></th>
+            <th onclick="sortBy('FAB NO')">Fabrikasi No. <span id="s-FAB"></span></th>
             <th>Status SIOS</th>
             <th>Status (Lainnya)</th>
           </tr>
@@ -210,48 +180,43 @@
       </table>
     </div>
   </div>
-
 </div>
 
 <script>
-  const STORAGE_KEY = 'skwn_url_v5';
+  const STORAGE_KEY = 'skwn_url_v6';
   const CABANG_MAP  = {'2':'Bandung','3':'Semarang','5':'Solo','6':'Surabaya','9':'Cikarang'};
 
-  // Exact column names from sheet row 6
+  // Exact column names from row 1 of the raw data sheet
   const C = {
     cabang:  'Cabang',
     kode:    'Kode',
-    type:    'TYPE',
-    length:  'LENGTH (mm)',
-    width:   'WIDTH (mm)',
-    qty:     'QTY',
+    tipe:    'Tipe',
+    length:  'Length',
+    width:   'Width',
+    qty:     'Qty',
     satuan:  'Satuan',
     sqm:     'SQM',
-    fab:     'Fabrikasi No.',
-    status1: 'Status SIOS',
-    status2: 'Status (Lainnya)',
+    fab:     'FAB NO',
+    status1: 'Status1',
+    status2: 'Status2',
   };
 
   let allData    = [];
-  let allOptions = [];   // unique values for current tab
+  let allOptions = [];
   let activeTab  = 'kode';
-  let selectedVal= null; // the confirmed selected item
+  let selectedVal= null;
   let activeCab  = 'ALL';
   let filtered   = [];
   let hlIndex    = -1;
   let sortCol    = null;
   let sortDir    = 1;
 
-  // ── INIT ────────────────────────────────────────────────
   window.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) { document.getElementById('scriptUrl').value = saved; loadData(); }
-    document.addEventListener('click', e => {
-      if (!e.target.closest('.ac-wrap')) closeList();
-    });
+    document.addEventListener('click', e => { if (!e.target.closest('.ac-wrap')) closeList(); });
   });
 
-  // ── FETCH ───────────────────────────────────────────────
   async function loadData() {
     const url = localStorage.getItem(STORAGE_KEY) || document.getElementById('scriptUrl').value.trim();
     if (!url) return;
@@ -284,51 +249,43 @@
     loadData();
   }
 
-  // ── OPTIONS ─────────────────────────────────────────────
   function buildOptions() {
     if (activeTab === 'kode') {
       allOptions = [...new Set(allData.map(r => String(r[C.kode] ?? '').trim()).filter(Boolean))]
         .sort((a,b) => { const na=parseFloat(a),nb=parseFloat(b); return (!isNaN(na)&&!isNaN(nb)) ? na-nb : a.localeCompare(b,'id'); });
     } else {
-      allOptions = [...new Set(allData.map(r => String(r[C.type] ?? '').trim()).filter(Boolean))]
+      allOptions = [...new Set(allData.map(r => String(r[C.tipe] ?? '').trim()).filter(Boolean))]
         .sort((a,b) => a.localeCompare(b,'id'));
     }
   }
 
-  // ── TAB ─────────────────────────────────────────────────
   function switchTab(tab) {
     activeTab = tab;
     document.getElementById('tabKode').classList.toggle('active', tab==='kode');
     document.getElementById('tabNama').classList.toggle('active', tab==='nama');
     document.getElementById('fieldLabel').textContent = tab==='kode' ? 'Ketik Kode Barang' : 'Ketik Nama Barang';
-    document.getElementById('acInput').placeholder    = tab==='kode' ? 'Contoh: 1, 611, 7187…' : 'Contoh: A-1, BU/2, T-20…';
+    document.getElementById('acInput').placeholder    = tab==='kode' ? 'Contoh: 00001, 00611…' : 'Contoh: A-1, FMB-3EMWT…';
     buildOptions();
     clearInput();
   }
 
-  // ── AUTOCOMPLETE ────────────────────────────────────────
   function onType() {
     const q = document.getElementById('acInput').value.trim();
     document.getElementById('acClear').classList.toggle('visible', q.length > 0);
     document.getElementById('acInput').classList.remove('has-value');
-    selectedVal = null;
-    hlIndex = -1;
+    selectedVal = null; hlIndex = -1;
     if (q.length === 0) { closeList(); resetAll(); return; }
-    renderList(q);
-    openList();
+    renderList(q); openList();
   }
 
   function renderList(q) {
-    const ql  = q.toLowerCase();
+    const ql   = q.toLowerCase();
     const hits = allOptions.filter(v => v.toLowerCase().includes(ql)).slice(0, 80);
     const list = document.getElementById('acList');
-    if (hits.length === 0) {
-      list.innerHTML = '<div class="ac-empty">Tidak ditemukan</div>';
-      return;
-    }
+    if (hits.length === 0) { list.innerHTML = '<div class="ac-empty">Tidak ditemukan</div>'; return; }
     list.innerHTML = hits.map((v, i) => {
-      const highlighted = v.replace(new RegExp('(' + escRe(q) + ')', 'gi'), '<mark>$1</mark>');
-      return `<div class="ac-item" data-val="${esc(v)}" data-idx="${i}" onmousedown="selectItem('${esc(v)}')">${highlighted}</div>`;
+      const hi = v.replace(new RegExp('(' + escRe(q) + ')', 'gi'), '<mark>$1</mark>');
+      return `<div class="ac-item" data-val="${esc(v)}" data-idx="${i}" onmousedown="selectItem('${esc(v)}')">${hi}</div>`;
     }).join('');
   }
 
@@ -340,16 +297,15 @@
   function closeList() { document.getElementById('acList').classList.remove('open'); hlIndex = -1; }
 
   function onKey(e) {
-    const list  = document.getElementById('acList');
-    const items = list.querySelectorAll('.ac-item');
-    if (e.key === 'ArrowDown') { e.preventDefault(); hlIndex = Math.min(hlIndex+1, items.length-1); highlight(items); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); hlIndex = Math.max(hlIndex-1, 0); highlight(items); }
-    else if (e.key === 'Enter') { if (hlIndex >= 0 && items[hlIndex]) selectItem(items[hlIndex].dataset.val); }
-    else if (e.key === 'Escape') { closeList(); }
+    const items = document.getElementById('acList').querySelectorAll('.ac-item');
+    if (e.key==='ArrowDown') { e.preventDefault(); hlIndex=Math.min(hlIndex+1,items.length-1); highlight(items); }
+    else if (e.key==='ArrowUp') { e.preventDefault(); hlIndex=Math.max(hlIndex-1,0); highlight(items); }
+    else if (e.key==='Enter') { if (hlIndex>=0&&items[hlIndex]) selectItem(items[hlIndex].dataset.val); }
+    else if (e.key==='Escape') closeList();
   }
 
   function highlight(items) {
-    items.forEach((el, i) => el.classList.toggle('highlighted', i === hlIndex));
+    items.forEach((el,i) => el.classList.toggle('highlighted', i===hlIndex));
     if (items[hlIndex]) items[hlIndex].scrollIntoView({block:'nearest'});
   }
 
@@ -358,36 +314,30 @@
     document.getElementById('acInput').value = val;
     document.getElementById('acInput').classList.add('has-value');
     document.getElementById('acClear').classList.add('visible');
-    closeList();
-    activeCab = 'ALL';
-    buildCabangPills();
-    applySearch();
+    closeList(); activeCab = 'ALL';
+    buildCabangPills(); applySearch();
   }
 
   function clearInput() {
     document.getElementById('acInput').value = '';
     document.getElementById('acInput').classList.remove('has-value');
     document.getElementById('acClear').classList.remove('visible');
-    closeList();
-    selectedVal = null;
-    activeCab   = 'ALL';
+    closeList(); selectedVal = null; activeCab = 'ALL';
     document.getElementById('cabangWrap').style.display = 'none';
     resetAll();
   }
 
-  // ── CABANG PILLS ────────────────────────────────────────
   function buildCabangPills() {
     const matching = allData.filter(r => {
-      const field = activeTab==='kode' ? String(r[C.kode]??'').trim() : String(r[C.type]??'').trim();
-      return field === selectedVal;
+      const f = activeTab==='kode' ? String(r[C.kode]??'').trim() : String(r[C.tipe]??'').trim();
+      return f === selectedVal;
     });
     const branches = [...new Set(matching.map(r => String(r[C.cabang]??'').trim()).filter(Boolean))].sort();
     const row = document.getElementById('cabangRow');
     row.innerHTML = '<div class="c-pill active" data-cab="ALL" onclick="filterCab(this)">Semua Cabang</div>';
     branches.forEach(b => {
       const p = document.createElement('div');
-      p.className = 'c-pill';
-      p.dataset.cab = b;
+      p.className='c-pill'; p.dataset.cab=b;
       p.textContent = CABANG_MAP[b] || b;
       p.onclick = function(){ filterCab(this); };
       row.appendChild(p);
@@ -397,37 +347,32 @@
 
   function filterCab(el) {
     document.querySelectorAll('.c-pill').forEach(p => p.classList.remove('active'));
-    el.classList.add('active');
-    activeCab = el.dataset.cab;
-    applySearch();
+    el.classList.add('active'); activeCab = el.dataset.cab; applySearch();
   }
 
-  // ── SEARCH & FILTER ─────────────────────────────────────
   function applySearch() {
     if (!selectedVal) { resetAll(); return; }
     filtered = allData.filter(r => {
-      const field = activeTab==='kode' ? String(r[C.kode]??'').trim() : String(r[C.type]??'').trim();
-      if (field !== selectedVal) return false;
-      if (activeCab !== 'ALL' && String(r[C.cabang]??'').trim() !== activeCab) return false;
+      const f = activeTab==='kode' ? String(r[C.kode]??'').trim() : String(r[C.tipe]??'').trim();
+      if (f !== selectedVal) return false;
+      if (activeCab!=='ALL' && String(r[C.cabang]??'').trim() !== activeCab) return false;
       return true;
     });
     if (sortCol) doSort();
-    updateSummary();
-    renderTable();
+    updateSummary(); renderTable();
   }
 
-  // ── SORT ────────────────────────────────────────────────
   function sortBy(col) {
-    if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
-    document.querySelectorAll('th span[id^="s-"]').forEach(el => el.textContent = '');
-    const map = {'Cabang':'Cabang','Kode':'Kode','TYPE':'TYPE','LENGTH (mm)':'LENGTH','WIDTH (mm)':'WIDTH','QTY':'QTY','SQM':'SQM','Fabrikasi No.':'FAB'};
-    if (map[col]) { const el = document.getElementById('s-'+map[col]); if(el) el.textContent = sortDir===1?'↑':'↓'; }
+    if (sortCol===col) sortDir*=-1; else { sortCol=col; sortDir=1; }
+    document.querySelectorAll('th span[id^="s-"]').forEach(el => el.textContent='');
+    const el = document.getElementById('s-'+col);
+    if (el) el.textContent = sortDir===1?'↑':'↓';
     doSort(); renderTable();
   }
 
   function doSort() {
     filtered.sort((a,b) => {
-      let va = a[sortCol]??'', vb = b[sortCol]??'';
+      let va=a[sortCol]??'', vb=b[sortCol]??'';
       if (sortCol===C.cabang) { va=CABANG_MAP[String(va).trim()]||va; vb=CABANG_MAP[String(vb).trim()]||vb; }
       const na=parseFloat(String(va).replace(/,/g,'')), nb=parseFloat(String(vb).replace(/,/g,''));
       if (!isNaN(na)&&!isNaN(nb)) return (na-nb)*sortDir;
@@ -435,7 +380,6 @@
     });
   }
 
-  // ── SUMMARY ─────────────────────────────────────────────
   function updateSummary() {
     const totalQty = filtered.reduce((s,r) => s+(parseFloat(r[C.qty])||0), 0);
     const totalSqm = filtered.reduce((s,r) => s+(parseFloat(r[C.sqm])||0), 0);
@@ -448,11 +392,10 @@
     document.getElementById('summaryStrip').style.display = 'flex';
   }
 
-  // ── RENDER ───────────────────────────────────────────────
   function renderTable() {
     document.getElementById('rowCount').textContent = filtered.length.toLocaleString('id-ID');
-    if (filtered.length === 0) {
-      document.getElementById('tableBody').innerHTML = `<tr><td colspan="11"><div class="state-box">
+    if (filtered.length===0) {
+      document.getElementById('tableBody').innerHTML=`<tr><td colspan="11"><div class="state-box">
         <div class="state-icon">📭</div><div class="state-title">Tidak ada stok ditemukan</div>
         <div class="state-desc">Item ini tidak tersedia di cabang yang dipilih.</div>
       </div></td></tr>`; return;
@@ -464,7 +407,7 @@
       return `<tr>
         <td class="bold">${esc(CABANG_MAP[cab]||cab||'—')}</td>
         <td class="mono">${esc(r[C.kode]??'—')}</td>
-        <td>${esc(r[C.type]||'—')}</td>
+        <td>${esc(r[C.tipe]||'—')}</td>
         <td class="right">${fmtNum(r[C.length])}</td>
         <td class="right">${fmtNum(r[C.width])}</td>
         <td class="right"><strong>${esc(r[C.qty]??'—')}</strong></td>
@@ -477,7 +420,6 @@
     }).join('');
   }
 
-  // ── HELPERS ──────────────────────────────────────────────
   function normStatus(v) {
     if (!v) return '';
     const s=String(v).trim(), sl=s.toLowerCase();
@@ -488,7 +430,8 @@
   }
 
   function statusBadge(raw) {
-    const v=normStatus(raw); if (!v||v==='-') return '<span class="badge badge-muted">—</span>';
+    const v=normStatus(raw);
+    if (!v||v==='-') return '<span class="badge badge-muted">—</span>';
     const vl=v.toLowerCase();
     if (vl==='available') return '<span class="badge badge-green">Available</span>';
     if (vl.startsWith('available - slow moving')) return '<span class="badge badge-yellow">Slow Moving</span>';
@@ -520,9 +463,9 @@
   function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 
   function resetAll() {
-    document.getElementById('rowCount').textContent = '—';
-    document.getElementById('summaryStrip').style.display = 'none';
-    document.getElementById('tableBody').innerHTML = `<tr><td colspan="11"><div class="state-box">
+    document.getElementById('rowCount').textContent='—';
+    document.getElementById('summaryStrip').style.display='none';
+    document.getElementById('tableBody').innerHTML=`<tr><td colspan="11"><div class="state-box">
       <div class="state-icon">🔍</div><div class="state-title">Pilih item untuk melihat stok</div>
       <div class="state-desc">Ketik Kode atau Nama Barang di atas untuk mencari.</div>
     </div></td></tr>`;
