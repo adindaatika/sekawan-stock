@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sekawan — Stock Lookup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:   #0F1923; --navy2:  #162030; --navy3:  #1E2D3D;
+    --steel:  #2E86AB; --steel2: #3A9CC2; --muted:  #4A6080;
+    --text:   #C8D8E8; --text2:  #8AA0B8; --border: #1E2D3D;
+    --green:  #2ECC71; --yellow: #F39C12; --red:    #E74C3C; --white:  #EAF2FF;
+    --mono: 'JetBrains Mono', monospace; --sans: 'Inter', sans-serif;
+  }
+  body { background: var(--navy); color: var(--text); font-family: var(--sans); min-height: 100vh; font-size: 14px; }
+
+  .header { background: var(--navy2); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo-mark { width: 32px; height: 32px; background: var(--steel); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-weight: 500; font-size: 13px; color: #fff; }
+  .logo-text { font-size: 15px; font-weight: 600; color: var(--white); }
+  .logo-sub { font-size: 11px; color: var(--text2); }
+  .last-sync { font-size: 11px; color: var(--muted); font-family: var(--mono); text-align: right; }
+  .last-sync span { color: var(--steel2); }
+
+  .main { max-width: 1300px; margin: 0 auto; padding: 28px 24px 60px; }
+
+  /* CONFIG */
+  .config-card { background: var(--navy2); border: 1px solid var(--steel); border-radius: 10px; padding: 18px 20px; margin-bottom: 24px; }
+  .config-title { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 10px; }
+  .config-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  #scriptUrl { background: var(--navy3); border: 1px solid var(--muted); border-radius: 6px; padding: 8px 12px; color: var(--white); font-family: var(--mono); font-size: 12px; flex: 1; min-width: 260px; outline: none; transition: border-color 0.15s; }
+  #scriptUrl:focus { border-color: var(--steel); }
+  #scriptUrl::placeholder { color: var(--muted); }
+  .config-hint { margin-top: 8px; font-size: 11px; color: var(--muted); }
+
+  .btn { border: none; border-radius: 6px; padding: 8px 18px; font-family: var(--sans); font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+  .btn-primary { background: var(--steel); color: #fff; }
+  .btn-primary:hover { background: var(--steel2); }
+  .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-ghost { background: transparent; border: 1px solid var(--muted); color: var(--text2); }
+  .btn-ghost:hover { border-color: var(--text2); color: var(--white); }
+
+  /* SEARCH PANEL */
+  .search-panel { background: var(--navy2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+  .field-label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+
+  .search-tabs { display: flex; gap: 2px; background: var(--navy3); border-radius: 7px; padding: 3px; margin-bottom: 16px; width: fit-content; }
+  .tab { padding: 5px 16px; border-radius: 5px; font-size: 12px; font-weight: 500; color: var(--text2); cursor: pointer; transition: all 0.15s; user-select: none; }
+  .tab.active { background: var(--steel); color: #fff; }
+
+  .search-row { display: flex; gap: 10px; align-items: flex-start; flex-wrap: wrap; }
+  .search-group { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 200px; position: relative; }
+
+  /* AUTOCOMPLETE INPUT */
+  .ac-wrap { position: relative; }
+  .ac-input { width: 100%; background: var(--navy3); border: 1px solid var(--muted); border-radius: 6px; padding: 9px 36px 9px 12px; color: var(--white); font-family: var(--sans); font-size: 13px; outline: none; transition: border-color 0.15s; }
+  .ac-input:focus { border-color: var(--steel); }
+  .ac-input::placeholder { color: var(--muted); }
+  .ac-input.has-value { border-color: var(--steel2); }
+  .ac-clear { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 2px; display: none; }
+  .ac-clear.visible { display: block; }
+  .ac-clear:hover { color: var(--white); }
+
+  /* DROPDOWN LIST */
+  .ac-list { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--navy2); border: 1px solid var(--steel); border-radius: 8px; max-height: 240px; overflow-y: auto; z-index: 200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .ac-list.open { display: block; }
+  .ac-list::-webkit-scrollbar { width: 6px; }
+  .ac-list::-webkit-scrollbar-track { background: var(--navy3); }
+  .ac-list::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 3px; }
+  .ac-item { padding: 9px 14px; cursor: pointer; font-size: 13px; color: var(--text); border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  .ac-item:last-child { border-bottom: none; }
+  .ac-item:hover, .ac-item.highlighted { background: var(--navy3); color: var(--white); }
+  .ac-item mark { background: none; color: var(--steel2); font-weight: 600; }
+  .ac-empty { padding: 12px 14px; color: var(--muted); font-size: 13px; }
+
+  /* CABANG PILLS */
+  .cabang-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+  .c-pill { background: var(--navy3); border: 1px solid var(--border); border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 500; color: var(--text2); cursor: pointer; white-space: nowrap; transition: all 0.15s; user-select: none; }
+  .c-pill:hover { border-color: var(--steel); color: var(--text); }
+  .c-pill.active { background: var(--steel); border-color: var(--steel); color: #fff; }
+
+  /* RESULTS */
+  .results-wrap { background: var(--navy2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .results-header { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .results-meta { font-size: 12px; color: var(--text2); }
+  .results-meta strong { color: var(--white); }
+
+  .summary-strip { display: flex; border-bottom: 1px solid var(--border); }
+  .summary-item { flex: 1; padding: 10px 18px; border-right: 1px solid var(--border); }
+  .summary-item:last-child { border-right: none; }
+  .s-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 3px; }
+  .s-val { font-family: var(--mono); font-size: 18px; font-weight: 500; color: var(--white); }
+  .s-val.accent { color: var(--steel2); }
+
+  .tbl-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--navy3); }
+  th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.6px; white-space: nowrap; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; transition: color 0.1s; }
+  th:hover, th.sorted { color: var(--steel2); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--navy3); }
+  td { padding: 10px 14px; white-space: nowrap; }
+  td.mono { font-family: var(--mono); font-size: 12px; color: var(--text2); }
+  td.bold { font-weight: 500; color: var(--white); }
+  td.right { text-align: right; font-family: var(--mono); font-size: 12px; }
+  td.note { max-width: 220px; overflow: hidden; text-overflow: ellipsis; font-size: 12px; color: var(--text2); }
+
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 4px; font-size: 11px; font-weight: 500; white-space: nowrap; }
+  .badge-green  { background: rgba(46,204,113,0.13); color: #2ECC71; }
+  .badge-yellow { background: rgba(243,156,18,0.13);  color: #F39C12; }
+  .badge-red    { background: rgba(231,76,60,0.13);   color: #E74C3C; }
+  .badge-muted  { background: rgba(74,96,128,0.2);    color: var(--text2); }
+
+  .state-box { padding: 56px 20px; text-align: center; color: var(--text2); }
+  .state-icon { font-size: 34px; margin-bottom: 10px; }
+  .state-title { font-size: 15px; font-weight: 500; color: var(--text); margin-bottom: 5px; }
+  .state-desc { font-size: 13px; line-height: 1.6; max-width: 380px; margin: 0 auto; }
+  .spinner { width: 26px; height: 26px; border: 3px solid var(--border); border-top-color: var(--steel); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .inline-spin { width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; margin-right: 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">SK</div>
+    <div>
+      <div class="logo-text">Sekawan Stock Lookup</div>
+      <div class="logo-sub">Belting &amp; Tekstil</div>
+    </div>
+  </div>
+  <div class="last-sync" id="lastSync">Belum tersinkronisasi</div>
+</div>
+
+<div class="main">
+
+  <!-- CONFIG -->
+  <div class="config-card" id="configCard">
+    <div class="config-title">🔗 Hubungkan ke Data Source</div>
+    <div class="config-row">
+      <input id="scriptUrl" type="text" placeholder="Paste URL Google Apps Script Web App…">
+      <button class="btn btn-primary" id="btnConnect" onclick="saveAndLoad()">Hubungkan</button>
+    </div>
+    <div class="config-hint">URL disimpan di browser — tidak perlu diisi ulang setiap kali buka.</div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-panel" id="searchPanel" style="display:none">
+    <div class="search-tabs">
+      <div class="tab active" id="tabKode" onclick="switchTab('kode')">Kode Barang</div>
+      <div class="tab" id="tabNama" onclick="switchTab('nama')">Nama Barang</div>
+    </div>
+
+    <div class="field-label" id="fieldLabel">Ketik Kode Barang</div>
+    <div class="ac-wrap">
+      <input class="ac-input" id="acInput" type="text" placeholder="Ketik untuk mencari…" autocomplete="off"
+        oninput="onType()" onkeydown="onKey(event)" onfocus="openList()">
+      <button class="ac-clear" id="acClear" onclick="clearInput()">×</button>
+      <div class="ac-list" id="acList"></div>
+    </div>
+
+    <!-- CABANG PILLS — shown after item selected -->
+    <div id="cabangWrap" style="display:none">
+      <div class="field-label" style="margin-top:16px">Filter Cabang</div>
+      <div class="cabang-row" id="cabangRow"></div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-wrap">
+    <div class="results-header">
+      <div class="results-meta">Menampilkan <strong id="rowCount">—</strong> baris</div>
+    </div>
+    <div id="summaryStrip" style="display:none" class="summary-strip">
+      <div class="summary-item"><div class="s-label">Total Roll / Pcs</div><div class="s-val accent" id="sumQty">—</div></div>
+      <div class="summary-item"><div class="s-label">Total SQM</div><div class="s-val" id="sumSqm">—</div></div>
+      <div class="summary-item"><div class="s-label">Baris Available</div><div class="s-val accent" id="sumAvail">—</div></div>
+      <div class="summary-item"><div class="s-label">Cabang Tersedia</div><div class="s-val" id="sumCabang">—</div></div>
+    </div>
+    <div class="tbl-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortBy('Cabang')">Cabang <span id="s-Cabang"></span></th>
+            <th onclick="sortBy('Kode')">Kode <span id="s-Kode"></span></th>
+            <th onclick="sortBy('TYPE')">TYPE <span id="s-TYPE"></span></th>
+            <th onclick="sortBy('LENGTH (mm)')">Length (mm) <span id="s-LENGTH"></span></th>
+            <th onclick="sortBy('WIDTH (mm)')">Width (mm) <span id="s-WIDTH"></span></th>
+            <th onclick="sortBy('QTY')">QTY <span id="s-QTY"></span></th>
+            <th>Satuan</th>
+            <th onclick="sortBy('SQM')">SQM <span id="s-SQM"></span></th>
+            <th onclick="sortBy('Fabrikasi No.')">Fabrikasi No. <span id="s-FAB"></span></th>
+            <th>Status SIOS</th>
+            <th>Status (Lainnya)</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="11">
+            <div class="state-box">
+              <div class="state-icon">🔍</div>
+              <div class="state-title">Belum ada pencarian</div>
+              <div class="state-desc">Hubungkan ke data source, lalu ketik Kode atau Nama Barang.</div>
+            </div>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const STORAGE_KEY = 'skwn_url_v5';
+  const CABANG_MAP  = {'2':'Bandung','3':'Semarang','5':'Solo','6':'Surabaya','9':'Cikarang'};
+
+  // Exact column names from sheet row 6
+  const C = {
+    cabang:  'Cabang',
+    kode:    'Kode',
+    type:    'TYPE',
+    length:  'LENGTH (mm)',
+    width:   'WIDTH (mm)',
+    qty:     'QTY',
+    satuan:  'Satuan',
+    sqm:     'SQM',
+    fab:     'Fabrikasi No.',
+    status1: 'Status SIOS',
+    status2: 'Status (Lainnya)',
+  };
+
+  let allData    = [];
+  let allOptions = [];   // unique values for current tab
+  let activeTab  = 'kode';
+  let selectedVal= null; // the confirmed selected item
+  let activeCab  = 'ALL';
+  let filtered   = [];
+  let hlIndex    = -1;
+  let sortCol    = null;
+  let sortDir    = 1;
+
+  // ── INIT ────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) { document.getElementById('scriptUrl').value = saved; loadData(); }
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.ac-wrap')) closeList();
+    });
+  });
+
+  // ── FETCH ───────────────────────────────────────────────
+  async function loadData() {
+    const url = localStorage.getItem(STORAGE_KEY) || document.getElementById('scriptUrl').value.trim();
+    if (!url) return;
+    setBtnLoading(true);
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      let rows, ts;
+      if (Array.isArray(json)) { rows = json; ts = '—'; }
+      else if (json.data && Array.isArray(json.data)) { rows = json.data; ts = json.lastUpdated || '—'; }
+      else throw new Error('Format tidak valid dari Apps Script.');
+
+      allData = rows.filter(r => r[C.kode] !== undefined && String(r[C.kode]).trim() !== '');
+      document.getElementById('lastSync').innerHTML = 'Data per: <span>' + esc(ts) + '</span>';
+      document.getElementById('configCard').style.display  = 'none';
+      document.getElementById('searchPanel').style.display = 'block';
+      buildOptions();
+      resetAll();
+    } catch(err) {
+      showError(err.message);
+      document.getElementById('configCard').style.display = 'block';
+    } finally { setBtnLoading(false); }
+  }
+
+  function saveAndLoad() {
+    const url = document.getElementById('scriptUrl').value.trim();
+    if (!url) { alert('Masukkan URL Apps Script terlebih dahulu.'); return; }
+    localStorage.setItem(STORAGE_KEY, url);
+    loadData();
+  }
+
+  // ── OPTIONS ─────────────────────────────────────────────
+  function buildOptions() {
+    if (activeTab === 'kode') {
+      allOptions = [...new Set(allData.map(r => String(r[C.kode] ?? '').trim()).filter(Boolean))]
+        .sort((a,b) => { const na=parseFloat(a),nb=parseFloat(b); return (!isNaN(na)&&!isNaN(nb)) ? na-nb : a.localeCompare(b,'id'); });
+    } else {
+      allOptions = [...new Set(allData.map(r => String(r[C.type] ?? '').trim()).filter(Boolean))]
+        .sort((a,b) => a.localeCompare(b,'id'));
+    }
+  }
+
+  // ── TAB ─────────────────────────────────────────────────
+  function switchTab(tab) {
+    activeTab = tab;
+    document.getElementById('tabKode').classList.toggle('active', tab==='kode');
+    document.getElementById('tabNama').classList.toggle('active', tab==='nama');
+    document.getElementById('fieldLabel').textContent = tab==='kode' ? 'Ketik Kode Barang' : 'Ketik Nama Barang';
+    document.getElementById('acInput').placeholder    = tab==='kode' ? 'Contoh: 1, 611, 7187…' : 'Contoh: A-1, BU/2, T-20…';
+    buildOptions();
+    clearInput();
+  }
+
+  // ── AUTOCOMPLETE ────────────────────────────────────────
+  function onType() {
+    const q = document.getElementById('acInput').value.trim();
+    document.getElementById('acClear').classList.toggle('visible', q.length > 0);
+    document.getElementById('acInput').classList.remove('has-value');
+    selectedVal = null;
+    hlIndex = -1;
+    if (q.length === 0) { closeList(); resetAll(); return; }
+    renderList(q);
+    openList();
+  }
+
+  function renderList(q) {
+    const ql  = q.toLowerCase();
+    const hits = allOptions.filter(v => v.toLowerCase().includes(ql)).slice(0, 80);
+    const list = document.getElementById('acList');
+    if (hits.length === 0) {
+      list.innerHTML = '<div class="ac-empty">Tidak ditemukan</div>';
+      return;
+    }
+    list.innerHTML = hits.map((v, i) => {
+      const highlighted = v.replace(new RegExp('(' + escRe(q) + ')', 'gi'), '<mark>$1</mark>');
+      return `<div class="ac-item" data-val="${esc(v)}" data-idx="${i}" onmousedown="selectItem('${esc(v)}')">${highlighted}</div>`;
+    }).join('');
+  }
+
+  function openList() {
+    const q = document.getElementById('acInput').value.trim();
+    if (q && !selectedVal) { renderList(q); document.getElementById('acList').classList.add('open'); }
+  }
+
+  function closeList() { document.getElementById('acList').classList.remove('open'); hlIndex = -1; }
+
+  function onKey(e) {
+    const list  = document.getElementById('acList');
+    const items = list.querySelectorAll('.ac-item');
+    if (e.key === 'ArrowDown') { e.preventDefault(); hlIndex = Math.min(hlIndex+1, items.length-1); highlight(items); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); hlIndex = Math.max(hlIndex-1, 0); highlight(items); }
+    else if (e.key === 'Enter') { if (hlIndex >= 0 && items[hlIndex]) selectItem(items[hlIndex].dataset.val); }
+    else if (e.key === 'Escape') { closeList(); }
+  }
+
+  function highlight(items) {
+    items.forEach((el, i) => el.classList.toggle('highlighted', i === hlIndex));
+    if (items[hlIndex]) items[hlIndex].scrollIntoView({block:'nearest'});
+  }
+
+  function selectItem(val) {
+    selectedVal = val;
+    document.getElementById('acInput').value = val;
+    document.getElementById('acInput').classList.add('has-value');
+    document.getElementById('acClear').classList.add('visible');
+    closeList();
+    activeCab = 'ALL';
+    buildCabangPills();
+    applySearch();
+  }
+
+  function clearInput() {
+    document.getElementById('acInput').value = '';
+    document.getElementById('acInput').classList.remove('has-value');
+    document.getElementById('acClear').classList.remove('visible');
+    closeList();
+    selectedVal = null;
+    activeCab   = 'ALL';
+    document.getElementById('cabangWrap').style.display = 'none';
+    resetAll();
+  }
+
+  // ── CABANG PILLS ────────────────────────────────────────
+  function buildCabangPills() {
+    const matching = allData.filter(r => {
+      const field = activeTab==='kode' ? String(r[C.kode]??'').trim() : String(r[C.type]??'').trim();
+      return field === selectedVal;
+    });
+    const branches = [...new Set(matching.map(r => String(r[C.cabang]??'').trim()).filter(Boolean))].sort();
+    const row = document.getElementById('cabangRow');
+    row.innerHTML = '<div class="c-pill active" data-cab="ALL" onclick="filterCab(this)">Semua Cabang</div>';
+    branches.forEach(b => {
+      const p = document.createElement('div');
+      p.className = 'c-pill';
+      p.dataset.cab = b;
+      p.textContent = CABANG_MAP[b] || b;
+      p.onclick = function(){ filterCab(this); };
+      row.appendChild(p);
+    });
+    document.getElementById('cabangWrap').style.display = 'block';
+  }
+
+  function filterCab(el) {
+    document.querySelectorAll('.c-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    activeCab = el.dataset.cab;
+    applySearch();
+  }
+
+  // ── SEARCH & FILTER ─────────────────────────────────────
+  function applySearch() {
+    if (!selectedVal) { resetAll(); return; }
+    filtered = allData.filter(r => {
+      const field = activeTab==='kode' ? String(r[C.kode]??'').trim() : String(r[C.type]??'').trim();
+      if (field !== selectedVal) return false;
+      if (activeCab !== 'ALL' && String(r[C.cabang]??'').trim() !== activeCab) return false;
+      return true;
+    });
+    if (sortCol) doSort();
+    updateSummary();
+    renderTable();
+  }
+
+  // ── SORT ────────────────────────────────────────────────
+  function sortBy(col) {
+    if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+    document.querySelectorAll('th span[id^="s-"]').forEach(el => el.textContent = '');
+    const map = {'Cabang':'Cabang','Kode':'Kode','TYPE':'TYPE','LENGTH (mm)':'LENGTH','WIDTH (mm)':'WIDTH','QTY':'QTY','SQM':'SQM','Fabrikasi No.':'FAB'};
+    if (map[col]) { const el = document.getElementById('s-'+map[col]); if(el) el.textContent = sortDir===1?'↑':'↓'; }
+    doSort(); renderTable();
+  }
+
+  function doSort() {
+    filtered.sort((a,b) => {
+      let va = a[sortCol]??'', vb = b[sortCol]??'';
+      if (sortCol===C.cabang) { va=CABANG_MAP[String(va).trim()]||va; vb=CABANG_MAP[String(vb).trim()]||vb; }
+      const na=parseFloat(String(va).replace(/,/g,'')), nb=parseFloat(String(vb).replace(/,/g,''));
+      if (!isNaN(na)&&!isNaN(nb)) return (na-nb)*sortDir;
+      return String(va).localeCompare(String(vb),'id')*sortDir;
+    });
+  }
+
+  // ── SUMMARY ─────────────────────────────────────────────
+  function updateSummary() {
+    const totalQty = filtered.reduce((s,r) => s+(parseFloat(r[C.qty])||0), 0);
+    const totalSqm = filtered.reduce((s,r) => s+(parseFloat(r[C.sqm])||0), 0);
+    const avail    = filtered.filter(r => normStatus(r[C.status1]).toLowerCase().startsWith('available')).length;
+    const branches = new Set(filtered.map(r => String(r[C.cabang]??'').trim()).filter(Boolean));
+    document.getElementById('sumQty').textContent    = totalQty.toLocaleString('id-ID');
+    document.getElementById('sumSqm').textContent    = totalSqm.toLocaleString('id-ID',{maximumFractionDigits:2});
+    document.getElementById('sumAvail').textContent  = avail.toLocaleString('id-ID');
+    document.getElementById('sumCabang').textContent = branches.size;
+    document.getElementById('summaryStrip').style.display = 'flex';
+  }
+
+  // ── RENDER ───────────────────────────────────────────────
+  function renderTable() {
+    document.getElementById('rowCount').textContent = filtered.length.toLocaleString('id-ID');
+    if (filtered.length === 0) {
+      document.getElementById('tableBody').innerHTML = `<tr><td colspan="11"><div class="state-box">
+        <div class="state-icon">📭</div><div class="state-title">Tidak ada stok ditemukan</div>
+        <div class="state-desc">Item ini tidak tersedia di cabang yang dipilih.</div>
+      </div></td></tr>`; return;
+    }
+    document.getElementById('tableBody').innerHTML = filtered.map(r => {
+      const sqm = parseFloat(r[C.sqm]);
+      const s2  = String(r[C.status2]??'').trim();
+      const cab = String(r[C.cabang]??'').trim();
+      return `<tr>
+        <td class="bold">${esc(CABANG_MAP[cab]||cab||'—')}</td>
+        <td class="mono">${esc(r[C.kode]??'—')}</td>
+        <td>${esc(r[C.type]||'—')}</td>
+        <td class="right">${fmtNum(r[C.length])}</td>
+        <td class="right">${fmtNum(r[C.width])}</td>
+        <td class="right"><strong>${esc(r[C.qty]??'—')}</strong></td>
+        <td class="mono">${esc(normSatuan(r[C.satuan]))}</td>
+        <td class="right">${isNaN(sqm)?'—':sqm.toFixed(2)}</td>
+        <td class="mono">${esc(r[C.fab]||'—')}</td>
+        <td>${statusBadge(r[C.status1])}</td>
+        <td class="note" title="${esc(s2)}">${esc(s2||'—')}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── HELPERS ──────────────────────────────────────────────
+  function normStatus(v) {
+    if (!v) return '';
+    const s=String(v).trim(), sl=s.toLowerCase();
+    if (sl==='available'||sl==='available ') return 'Available';
+    if (sl.startsWith('available - slow moving')) return 'Available - Slow Moving';
+    if (sl.startsWith('available')) return 'Available'+s.slice(9);
+    return s;
+  }
+
+  function statusBadge(raw) {
+    const v=normStatus(raw); if (!v||v==='-') return '<span class="badge badge-muted">—</span>';
+    const vl=v.toLowerCase();
+    if (vl==='available') return '<span class="badge badge-green">Available</span>';
+    if (vl.startsWith('available - slow moving')) return '<span class="badge badge-yellow">Slow Moving</span>';
+    if (vl.startsWith('available')) return `<span class="badge badge-yellow">${esc(v)}</span>`;
+    if (['waste','barang retur','retur'].some(x=>vl.includes(x))) return `<span class="badge badge-red">${esc(v)}</span>`;
+    if (vl.startsWith('tidak bisa')||vl.startsWith('tidakbisa')) return '<span class="badge badge-red">Tdk Bisa Dijual</span>';
+    if (['habis','out of stock'].some(x=>vl.includes(x))) return `<span class="badge badge-red">${esc(v)}</span>`;
+    if (['finished good','barang jadi'].some(x=>vl.includes(x))) return `<span class="badge badge-green">${esc(v)}</span>`;
+    return `<span class="badge badge-muted">${esc(v)}</span>`;
+  }
+
+  function normSatuan(v) {
+    if (!v) return '—';
+    const s=String(v).trim().toLowerCase();
+    if (['roll','rol','rool'].includes(s)) return 'Roll';
+    if (['pcs','pc'].includes(s)) return 'Pcs';
+    if (['gram','gr'].includes(s)) return 'Gram';
+    if (!isNaN(parseFloat(s))&&isFinite(s)) return '—';
+    return String(v).trim();
+  }
+
+  function fmtNum(v) {
+    if (v===''||v===null||v===undefined) return '—';
+    const n=parseFloat(String(v).replace(/,/g,''));
+    return isNaN(n) ? esc(v) : n.toLocaleString('id-ID');
+  }
+
+  function esc(s) { return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+  function resetAll() {
+    document.getElementById('rowCount').textContent = '—';
+    document.getElementById('summaryStrip').style.display = 'none';
+    document.getElementById('tableBody').innerHTML = `<tr><td colspan="11"><div class="state-box">
+      <div class="state-icon">🔍</div><div class="state-title">Pilih item untuk melihat stok</div>
+      <div class="state-desc">Ketik Kode atau Nama Barang di atas untuk mencari.</div>
+    </div></td></tr>`;
+  }
+
+  function setBtnLoading(on) {
+    const btn=document.getElementById('btnConnect');
+    btn.disabled=on; btn.innerHTML=on?'<span class="inline-spin"></span>Loading…':'Hubungkan';
+  }
+
+  function showError(msg) {
+    document.getElementById('tableBody').innerHTML=`<tr><td colspan="11"><div class="state-box">
+      <div class="state-icon">⚠️</div><div class="state-title">Gagal memuat data</div>
+      <div class="state-desc">${esc(msg)}<br><br>
+        Pastikan:<br>1. URL Apps Script sudah benar<br>
+        2. Deploy sebagai <strong>Web App</strong> → akses <strong>"Anyone"</strong><br>
+        3. Setelah edit script, buat <strong>New Version</strong> saat redeploy
+      </div></div></td></tr>`;
+  }
+</script>
+</body>
+</html>
